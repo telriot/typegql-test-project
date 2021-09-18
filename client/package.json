@@ -3,23 +3,33 @@
   "version": "5.0.0",
   "private": true,
   "dependencies": {
+    "@apollo/client": "^3.4.12",
     "@emotion/cache": "latest",
     "@emotion/react": "latest",
     "@emotion/server": "latest",
     "@emotion/styled": "latest",
     "@mui/material": "next",
     "clsx": "latest",
+    "formik": "^2.2.9",
+    "graphql": "^15.5.3",
     "next": "latest",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "yup": "^0.32.9"
   },
   "scripts": {
     "dev": "next",
     "build": "next build",
     "start": "next start",
+    "generate": "graphql-codegen --config codegen.yml",
     "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^2.2.0",
+    "@graphql-codegen/typescript": "^2.2.2",
+    "@graphql-codegen/typescript-operations": "^2.1.4",
+    "@graphql-codegen/typescript-react-apollo": "^3.1.4",
+    "@types/graphql": "^14.5.0",
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",

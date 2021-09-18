@@ -6,7 +6,7 @@
 	"license": "MIT",
 	"scripts": {
 		"start": "ts-node-dev --respawn -r tsconfig-paths/register src/index.ts",
-    "lint": "eslint . --ext .ts --ext .tsx"
+		"lint": "eslint . --ext .ts --ext .tsx"
 	},
 	"dependencies": {
 		"@typegoose/typegoose": "^8.3.0",

@@ -28,7 +28,9 @@
 			"user/*": ["./modules/user/*"],
 			"validation/*": ["./validation/*"],
 			"types/*":["./types/*"],
-			"errors/*":["./errors/*"]
+			"errors/*":["./errors/*"],
+			"utils/*":["./utils/*"]
+
 		}
 	},
 	"include": ["src/**/*.ts", "src/test/setup.js"],
