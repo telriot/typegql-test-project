@@ -1,0 +1,14 @@
+/node_modules/
+/build/
+/lib/
+/dist/
+/docs/
+.idea/*
+
+client/node_modules/
+client/build/
+
+.DS_Store
+coverage
+*.log
+*.env
