@@ -1,6 +1,6 @@
 import Express from 'express';
 import cors from 'cors';
-import { CORS_ALLOWED_ORIGINS } from './config';
+import { AUTH_COOKIE, CORS_ALLOWED_ORIGINS } from './config';
 import cookieSession from 'cookie-session';
 
 export const app = Express();
@@ -14,11 +14,11 @@ app.use(
 );
 app.use(
 	cookieSession({
-		name:'jwt-token-gql-test',
-		keys:[process.env.SESSION_SECRET || 'somerandomsecret'],
+		name: AUTH_COOKIE,
+		keys: [process.env.SESSION_SECRET || 'somerandomsecret'],
 		signed: true,
 		secure: process.env.NODE_ENV === 'production',
-		httpOnly:true,
+		httpOnly: true,
 		maxAge: 1000 * 60 * 60 * 24 * 365
 	})
 );

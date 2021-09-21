@@ -14,6 +14,20 @@ export type Scalars = {
   Float: number;
 };
 
+export type CreateJobInput = {
+  companyName: Scalars['String'];
+  name: Scalars['String'];
+  postedBy: Scalars['String'];
+};
+
+export type Job = {
+  __typename?: 'Job';
+  _id: Scalars['String'];
+  companyName: Scalars['String'];
+  name: Scalars['String'];
+  postedBy: Scalars['String'];
+};
+
 export type LoginInput = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -21,8 +35,16 @@ export type LoginInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  deleteJob: Job;
   login: User;
-  register: User;
+  logout: Scalars['Boolean'];
+  register: Job;
+  updateJob: Job;
+};
+
+
+export type MutationDeleteJobArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -32,20 +54,35 @@ export type MutationLoginArgs = {
 
 
 export type MutationRegisterArgs = {
-  input: RegisterInput;
+  input: CreateJobInput;
+};
+
+
+export type MutationUpdateJobArgs = {
+  companyName: Scalars['String'];
+  id: Scalars['String'];
+  name: Scalars['String'];
 };
 
 export type Query = {
   __typename?: 'Query';
   getCurrentUser?: Maybe<User>;
+  getJob?: Maybe<Job>;
+  getJobs: Array<Job>;
   getUsers: Array<User>;
 };
 
-export type RegisterInput = {
-  email: Scalars['String'];
-  firstName: Scalars['String'];
-  lastName: Scalars['String'];
-  password: Scalars['String'];
+
+export type QueryGetJobArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryGetJobsArgs = {
+  name?: Maybe<Scalars['String']>;
+  postedBy?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  take?: Maybe<Scalars['Int']>;
 };
 
 export type User = {
@@ -57,6 +94,13 @@ export type User = {
   password?: Maybe<Scalars['String']>;
 };
 
+export type DeleteJobMutationVariables = Exact<{
+  deleteJobId: Scalars['String'];
+}>;
+
+
+export type DeleteJobMutation = { __typename?: 'Mutation', deleteJob: { __typename?: 'Job', _id: string, name: string, postedBy: string, companyName: string } };
+
 export type LoginMutationVariables = Exact<{
   loginInput: LoginInput;
 }>;
@@ -64,10 +108,34 @@ export type LoginMutationVariables = Exact<{
 
 export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'User', firstName: string, lastName: string, email: string } };
 
+export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
+
+export type UpdateJobMutationVariables = Exact<{
+  updateJobCompanyName: Scalars['String'];
+  updateJobName: Scalars['String'];
+  updateJobId: Scalars['String'];
+}>;
+
+
+export type UpdateJobMutation = { __typename?: 'Mutation', updateJob: { __typename?: 'Job', _id: string, postedBy: string, name: string, companyName: string } };
+
 export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetCurrentUserQuery = { __typename?: 'Query', getCurrentUser?: Maybe<{ __typename?: 'User', _id: string, firstName: string, lastName: string }> };
+
+export type GetJobsQueryVariables = Exact<{
+  getJobsSkip?: Maybe<Scalars['Int']>;
+  getJobsTake?: Maybe<Scalars['Int']>;
+  getJobsName?: Maybe<Scalars['String']>;
+  getJobsPostedBy?: Maybe<Scalars['String']>;
+}>;
+
+
+export type GetJobsQuery = { __typename?: 'Query', getJobs: Array<{ __typename?: 'Job', _id: string, name: string, postedBy: string, companyName: string }> };
 
 export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -75,6 +143,42 @@ export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
 export type GetUsersQuery = { __typename?: 'Query', getUsers: Array<{ __typename?: 'User', _id: string, firstName: string, lastName: string, email: string }> };
 
 
+export const DeleteJobDocument = gql`
+    mutation DeleteJob($deleteJobId: String!) {
+  deleteJob(id: $deleteJobId) {
+    _id
+    name
+    postedBy
+    companyName
+  }
+}
+    `;
+export type DeleteJobMutationFn = Apollo.MutationFunction<DeleteJobMutation, DeleteJobMutationVariables>;
+
+/**
+ * __useDeleteJobMutation__
+ *
+ * To run a mutation, you first call `useDeleteJobMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteJobMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteJobMutation, { data, loading, error }] = useDeleteJobMutation({
+ *   variables: {
+ *      deleteJobId: // value for 'deleteJobId'
+ *   },
+ * });
+ */
+export function useDeleteJobMutation(baseOptions?: Apollo.MutationHookOptions<DeleteJobMutation, DeleteJobMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteJobMutation, DeleteJobMutationVariables>(DeleteJobDocument, options);
+      }
+export type DeleteJobMutationHookResult = ReturnType<typeof useDeleteJobMutation>;
+export type DeleteJobMutationResult = Apollo.MutationResult<DeleteJobMutation>;
+export type DeleteJobMutationOptions = Apollo.BaseMutationOptions<DeleteJobMutation, DeleteJobMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($loginInput: LoginInput!) {
   login(input: $loginInput) {
@@ -110,6 +214,78 @@ export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginM
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const LogoutDocument = gql`
+    mutation Logout {
+  logout
+}
+    `;
+export type LogoutMutationFn = Apollo.MutationFunction<LogoutMutation, LogoutMutationVariables>;
+
+/**
+ * __useLogoutMutation__
+ *
+ * To run a mutation, you first call `useLogoutMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLogoutMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [logoutMutation, { data, loading, error }] = useLogoutMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useLogoutMutation(baseOptions?: Apollo.MutationHookOptions<LogoutMutation, LogoutMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument, options);
+      }
+export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
+export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
+export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
+export const UpdateJobDocument = gql`
+    mutation UpdateJob($updateJobCompanyName: String!, $updateJobName: String!, $updateJobId: String!) {
+  updateJob(
+    companyName: $updateJobCompanyName
+    name: $updateJobName
+    id: $updateJobId
+  ) {
+    _id
+    postedBy
+    name
+    companyName
+  }
+}
+    `;
+export type UpdateJobMutationFn = Apollo.MutationFunction<UpdateJobMutation, UpdateJobMutationVariables>;
+
+/**
+ * __useUpdateJobMutation__
+ *
+ * To run a mutation, you first call `useUpdateJobMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateJobMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateJobMutation, { data, loading, error }] = useUpdateJobMutation({
+ *   variables: {
+ *      updateJobCompanyName: // value for 'updateJobCompanyName'
+ *      updateJobName: // value for 'updateJobName'
+ *      updateJobId: // value for 'updateJobId'
+ *   },
+ * });
+ */
+export function useUpdateJobMutation(baseOptions?: Apollo.MutationHookOptions<UpdateJobMutation, UpdateJobMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateJobMutation, UpdateJobMutationVariables>(UpdateJobDocument, options);
+      }
+export type UpdateJobMutationHookResult = ReturnType<typeof useUpdateJobMutation>;
+export type UpdateJobMutationResult = Apollo.MutationResult<UpdateJobMutation>;
+export type UpdateJobMutationOptions = Apollo.BaseMutationOptions<UpdateJobMutation, UpdateJobMutationVariables>;
 export const GetCurrentUserDocument = gql`
     query GetCurrentUser {
   getCurrentUser {
@@ -146,6 +322,52 @@ export function useGetCurrentUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetCurrentUserQueryHookResult = ReturnType<typeof useGetCurrentUserQuery>;
 export type GetCurrentUserLazyQueryHookResult = ReturnType<typeof useGetCurrentUserLazyQuery>;
 export type GetCurrentUserQueryResult = Apollo.QueryResult<GetCurrentUserQuery, GetCurrentUserQueryVariables>;
+export const GetJobsDocument = gql`
+    query GetJobs($getJobsSkip: Int, $getJobsTake: Int, $getJobsName: String, $getJobsPostedBy: String) {
+  getJobs(
+    skip: $getJobsSkip
+    take: $getJobsTake
+    name: $getJobsName
+    postedBy: $getJobsPostedBy
+  ) {
+    _id
+    name
+    postedBy
+    companyName
+  }
+}
+    `;
+
+/**
+ * __useGetJobsQuery__
+ *
+ * To run a query within a React component, call `useGetJobsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetJobsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetJobsQuery({
+ *   variables: {
+ *      getJobsSkip: // value for 'getJobsSkip'
+ *      getJobsTake: // value for 'getJobsTake'
+ *      getJobsName: // value for 'getJobsName'
+ *      getJobsPostedBy: // value for 'getJobsPostedBy'
+ *   },
+ * });
+ */
+export function useGetJobsQuery(baseOptions?: Apollo.QueryHookOptions<GetJobsQuery, GetJobsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetJobsQuery, GetJobsQueryVariables>(GetJobsDocument, options);
+      }
+export function useGetJobsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetJobsQuery, GetJobsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetJobsQuery, GetJobsQueryVariables>(GetJobsDocument, options);
+        }
+export type GetJobsQueryHookResult = ReturnType<typeof useGetJobsQuery>;
+export type GetJobsLazyQueryHookResult = ReturnType<typeof useGetJobsLazyQuery>;
+export type GetJobsQueryResult = Apollo.QueryResult<GetJobsQuery, GetJobsQueryVariables>;
 export const GetUsersDocument = gql`
     query GetUsers {
   getUsers {

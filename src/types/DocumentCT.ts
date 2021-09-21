@@ -8,7 +8,7 @@ import mongoose from 'mongoose'
 class DocumentCT {
 	@Field()
   @Expose()
-	@prop({default:new mongoose.Types.ObjectId()})
+	@prop({default:()=>new mongoose.Types.ObjectId()})
   // makes sure that when deserializing from a Mongoose Object, ObjectId is serialized into a string
   @Transform((value: any) => {
     if ('value' in value) {

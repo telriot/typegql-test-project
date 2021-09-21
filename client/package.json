@@ -8,6 +8,7 @@
     "@emotion/react": "latest",
     "@emotion/server": "latest",
     "@emotion/styled": "latest",
+    "@mui/icons-material": "^5.0.0",
     "@mui/material": "next",
     "clsx": "latest",
     "formik": "^2.2.9",
@@ -15,6 +16,7 @@
     "next": "latest",
     "react": "latest",
     "react-dom": "latest",
+    "use-debounce": "^7.0.0",
     "yup": "^0.32.9"
   },
   "scripts": {

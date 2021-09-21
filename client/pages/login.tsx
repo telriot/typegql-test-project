@@ -3,38 +3,31 @@ import {
 	Container,
 	Grid,
 	LinearProgress,
-	TextField
+	TextField,
+	Typography
 } from '@mui/material';
 import { FC } from 'react';
 import { Formik, Form } from 'formik';
 import { GetServerSideProps } from 'next';
-import client from '../apollo-client';
-import CurrentUser from 'src/queries/get-current-user';
 import { useLoginMutation } from 'src/graphql';
+import { useRouter } from 'next/router';
+import getIsAuth from 'src/utils/getIsAuth'
+import authRedirect from 'src/utils/authRedirect';
+
 export interface LoginProps {
 	className?: string;
 }
 
-export interface LoginFormInput {
-	email: string;
-	password: string;
-}
-
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-	
-	const { data } = await client.query({
-		query: CurrentUser,
-		context:{
-			headers:{
-				cookie:ctx.req.headers.cookie
-			}
-		}
-	});
-	return { props: { user: data.getCurrentUser } };
+	const currentUser = await getIsAuth(ctx)
+	if(currentUser) return authRedirect(ctx)
+	return { props: {} };
 };
-const LoginPage: FC<LoginProps> = () => {
 
-	const [loginFunction] = useLoginMutation();
+const LoginPage: FC = () => {
+	const [login] = useLoginMutation();
+	const router = useRouter()
+
 	return (
 		<Container maxWidth='md' sx={{ paddingY: '2rem' }}>
 			<Formik
@@ -42,13 +35,12 @@ const LoginPage: FC<LoginProps> = () => {
 					email: '',
 					password: ''
 				}}
-				onSubmit={async (
-					values,
-
-					formikHelpers
-				) => {
+				onSubmit={async (values, formikHelpers) => {
 					try {
-						await loginFunction({ variables: { loginInput: values } });
+						await login({
+							variables: { loginInput: values }
+						});
+						router.push('/home')
 						formikHelpers.resetForm();
 					} catch (error) {
 						console.log(error);
@@ -56,6 +48,9 @@ const LoginPage: FC<LoginProps> = () => {
 				}}>
 				{({ values, handleChange, touched, errors, isSubmitting }) => (
 					<Form>
+						<Typography variant='h3' sx={{ marginBottom: '2rem' }}>
+							Login
+						</Typography>
 						<Grid container>
 							<Grid item xs={12} style={{ marginBottom: '2rem' }}>
 								<TextField

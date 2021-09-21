@@ -25,6 +25,7 @@
 		"baseUrl": "./src",
 		"paths": {
 			"modules/*": ["./modules/*"],
+			"job/*": ["./modules/job/*"],
 			"user/*": ["./modules/user/*"],
 			"validation/*": ["./validation/*"],
 			"types/*":["./types/*"],
