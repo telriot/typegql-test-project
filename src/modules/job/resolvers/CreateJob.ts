@@ -5,7 +5,7 @@ import { JobModel, Job } from 'job/interfaces/Job';
 @Resolver(Job)
 class CreateJobResolver {
 	@Mutation(() => Job)
-	async register(
+	async createJob(
 		@Arg('input') { name, postedBy, companyName }: CreateJobInput
 	): Promise<Job> {
 		const job = await JobModel.create({
